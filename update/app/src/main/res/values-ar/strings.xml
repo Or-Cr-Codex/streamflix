@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">ستريم فليكس</string>
+
+	<string name="loading_error_title">حدث خطأ</string>
+	<string name="loading_error_retry">إعادة المحاولة</string>
+	<string name="loading_error_clear_cache">مسح ذاكرة التخزين المؤقت</string>
+    <string name="loading_error_details">تفاصيل الخطأ</string>
+
+	<string name="update_title">تحديث جديد متاح</string>
+	<string name="update_message">يتوفر إصدار جديد من التطبيق!</string>
+	<string name="update_current_version_label">الإصدار الحالي</string>
+	<string name="update_new_version_label">الإصدار الجديد</string>
+	<string name="update_release_notes">ملاحظات التحديث</string>
+	<string name="update_later">ربما لاحقًا</string>
+	<string name="update">تحديث</string>
+
+	<string name="app_layout">تخطيط التطبيق</string>
+    <string name="app_layout_auto">تلقائي</string>
+    <string name="app_layout_mobile">تخطيط الهاتف</string>
+    <string name="app_layout_tv">تخطيط التلفاز</string>
+    <string name="app_layout_apply">تطبيق</string> 
+
+	<string name="providers_all_languages">كل اللغات</string>
+	<string name="providers_choose_title">اختر مزود الخدمة</string>
+
+	<string name="main_menu_change_provider">تغيير المزود</string>
+	<string name="main_menu_search">بحث</string>
+	<string name="main_menu_home">الرئيسية</string>
+	<string name="main_menu_movies">أفلام</string>
+	<string name="main_menu_tv_shows">مسلسلات</string>
+	<string name="main_menu_settings">الإعدادات</string>
+
+	<string name="search_input_hint">ابحث عن الأفلام أو المسلسلات</string>
+	<string name="global_search">بحث شامل</string>
+	<string name="searching">جاري البحث...</string>
+	<string name="search_error">خطأ</string>
+	<string name="result">نتيجة</string>
+	<string name="results">نتائج</string>
+	<string name="switching_to_provider">التبديل إلى %s</string>
+
+	<string name="home_swiper_watch_now">شاهد الآن</string>
+	<string name="home_continue_watching">متابعة المشاهدة</string>
+	<string name="home_favorite_movies">الأفلام المفضلة</string>
+	<string name="home_favorite_tv_shows">المسلسلات المفضلة</string>
+
+	<string name="option_episode_open_tv_show">اذهب إلى المسلسل</string>
+	<string name="option_show_favorite">أضف إلى المفضلة</string>
+	<string name="option_show_unfavorite">إزالة من المفضلة</string>
+	<string name="option_show_watched">وُسِم كمشاهد</string>
+	<string name="option_show_mark_all_previous_watched">ضع علامة كمشاهدة حتى هنا</string>
+    <string name="option_show_mark_all_previous_unwatched">ضع علامة عدم المشاهدة حتى هنا</string>
+    <string name="option_show_unwatched">إلغاء الوسم كمشاهد</string>
+	<string name="option_clear_program">إزالة من متابعة المشاهدة</string>
+	<string name="option_cancel">إلغاء</string>
+
+	<string name="episode_item_info">الموسم %d الحلقة %d • %s</string>
+	<string name="episode_item_info_episode_only">الحلقة %d • %s</string>
+
+	<string name="tv_show_item_episode_number">الحلقة %d</string>
+	<string name="tv_show_item_season_number_episode_number">الموسم %d الحلقة %d</string>
+	<string name="tv_show_item_type">مسلسل</string>
+
+	<string name="tv_show_runtime_hours_minutes">%d ساعة %d دقيقة</string>
+	<string name="tv_show_runtime_minutes">%d دقيقة</string>
+	<string name="tv_show_watch_season_episode">مشاهدة الموسم %d الحلقة %d</string>
+	<string name="tv_show_watch_episode">مشاهدة الحلقة %d</string>
+	<string name="tv_show_trailer">الإعلان الترويجي</string>
+	<string name="tv_show_seasons">المواسم</string>
+	<string name="tv_show_cast">طاقم العمل</string>
+	<string name="tv_show_directors">مخرج</string>
+	<string name="tv_show_you_may_also_like">قد يعجبك أيضًا</string>
+
+	<string name="movie_item_type">فيلم</string>
+	<string name="movie_runtime_hours_minutes">%d ساعة %d دقيقة</string>
+	<string name="movie_runtime_minutes">%d دقيقة</string>
+	<string name="movie_watch_now">شاهد الآن</string>
+	<string name="movie_trailer">الإعلان الترويجي</string>
+	<string name="movie_cast">طاقم العمل</string>
+	<string name="movie_directors">مخرج</string>
+	<string name="movie_you_may_also_like">قد يعجبك أيضًا</string>
+
+	<string name="season_number">الموسم %d</string>
+	<string name="episode_number">الحلقة %d</string>
+
+	<string name="people_birthday">تاريخ الميلاد</string>
+	<string name="people_deathday">تاريخ الوفاة</string>
+	<string name="people_birthplace">مكان الميلاد</string>
+	<string name="people_biography">السيرة الذاتية</string>
+	<string name="people_read_more">قراءة المزيد ></string>
+
+	<string name="genre_header_name">أفلام ومسلسلات %s</string>
+
+	<string name="player_subtitle_tv_show">الموسم %d الحلقة %d • %s</string>
+	<string name="player_subtitle_tv_show_episode_only">الحلقة %d • %s</string>
+	<string name="player_picture_in_picture_not_supported">الوضع الصوري داخل الصورة غير مدعوم على جهازك</string>
+	<string name="player_external_player_title">تشغيل باستخدام</string>
+	<string name="player_external_player_error_video">الفيديو لم يتم تحميله بعد</string>
+        <string name="player_retry_later_message">الفيديو غير متاح حالياً. يرجى المحاولة مرة أخرى لاحقاً</string>
+	<string name="player_aspect_ratio_fit">ملاءمة الشاشة</string>
+	<string name="player_aspect_ratio_fill">تمديد</string>
+	<string name="player_aspect_ratio_zoom">تكبير</string>
+	<string name="player_settings_title">الإعدادات</string>
+	<string name="player_settings_quality_title">جودة الفيديو الحالي</string>
+	<string name="player_settings_quality_label">الجودة</string>
+	<string name="player_settings_quality_sub_label_auto">تلقائي (%dp)</string>
+	<string name="player_settings_quality_auto">تلقائي</string>
+	<string name="player_settings_quality_auto_selected">تلقائي • %dp</string>
+	<string name="player_settings_quality">%dp</string>
+	<string name="player_settings_audio_title">الصوت</string>
+	<string name="player_settings_audio_label">الصوت</string>
+	<string name="player_settings_subtitles_title">الترجمة/التعليقات المغلقة</string>
+	<string name="player_settings_subtitles_label">الترجمة</string>
+	<string name="player_settings_subtitles_off">إيقاف</string>
+    <string name="player_settings_caption_style_margin_title">هامش سفلي</string>
+    <string name="player_settings_caption_style_margin_label">هامش سفلي</string>
+
+	<string name="settings_about">حول</string>
+	<string name="settings_about_version">الإصدار</string>
+	<string name="settings_about_version_name">الإصدار %s</string>
+	<string name="settings_help">مساعدة</string>
+	<string name="settings_telegram">مجموعة تيليجرام</string>
+	<string name="settings_category_network_title">إعدادات الشبكة</string>
+	<string name="settings_category_provider_title">إعدادات المزود</string>
+	<string name="settings_category_provider_url">الرابط الرئيسي</string>
+	<string name="settings_category_provider_update_url">رابط البوابة</string>
+	<string name="settings_autoupdate">تحديث الرابط الرئيسي عند التشغيل</string>
+	<string name="settings_autoupdate_on">تشغيل</string>
+	<string name="settings_autoupdate_off">إيقاف</string>
+	<string name="settings_autoupdate_now">تحديث الرابط الرئيسي الآن</string>
+	<string name="settings_autoplay">تشغيل الحلقة التالية تلقائيًا</string>
+	<string name="settings_autoplay_on">في</string>
+	<string name="settings_autoplay_off">إيقاف</string>
+	<string name="autoplay_settings">إعدادات التشغيل التلقائي</string>
+	<string name="miscelaneous_title">متفرقات</string>
+	<string name="clear_cache_done">تم مسح الذاكرة المؤقتة</string>
+	<string name="clear_cache_done_409">تم مسح الذاكرة المؤقتة تلقائيًا بسبب خطأ HTTP 409</string>
+	<string name="voice_search">بحث صوتي</string>
+	<string name="voice_error_no_match">لم يتم التعرف على أي شيء</string>
+	<string name="voice_error_timeout">انتهت المهلة</string>
+	<string name="voice_error_audio">خطأ في الصوت</string>
+	<string name="voice_error_generic">خطأ في التعرف: %1$d</string>
+	<string name="voice_error_permission_denied">تم رفض إذن الميكروفون</string>
+	<string name="voice_permission_title">مطلوب إذن</string>
+	<string name="voice_permission_rationale">يلزم الوصول إلى الميكروفون لاستخدام البحث الصوتي.</string>
+	<string name="voice_error_no_result">لم يتم اكتشاف أي إدخال صوتي.</string>
+	<string name="voice_prompt">تحدث الآن</string>
+
+	<string name="watch_trailer_with">شاهد الإعلان الترويجي مع...</string>
+	<string name="youtube">YouTube</string>
+	<string name="smarttube">SmartTube</string>
+	<string name="smarttube_stable">SmartTube Stable</string>
+	<string name="smarttube_beta">SmartTube Beta</string>
+	<string name="choose_smarttube_version">اختر إصدار SmartTube</string>
+
+	<string name="settings_trailer_player_title">مشغل الإعلان الترويجي</string>
+	<string name="settings_trailer_player_summary">اختر المشغل المفضل للإعلانات الترويجية</string>
+	<string name="settings_trailer_player_ask">اسأل في كل مرة</string>
+	<string name="settings_trailer_player_reset">إعادة تعيين اختيار إصدار SmartTube</string>
+	<string name="settings_trailer_player_reset_summary">إجبار التطبيق على السؤال مرة أخرى عن إصدار SmartTube (Stable/Beta) الذي سيتم استخدامه.</string>
+
+	<string name="backup_category_title">النسخ الاحتياطي والاستعادة</string>
+	<string name="backup_export_title">تصدير بيانات المستخدم</string>
+	<string name="backup_export_summary">احفظ بياناتك (المفضلة، سجل المشاهدة) in a file.</string>
+	<string name="backup_import_title">استيراد بيانات المستخدم</string>
+	<string name="backup_import_summary">استعد بياناتك من ملف النسخ الاحتياطي.</string>
+
+	<string name="backup_export_success">تم تصدير النسخة الاحتياطية بنجاح!</string>
+	<string name="backup_export_error_write">حدث خطأ أثناء تصدير النسخة الاحتياطية.</string>
+	<string name="backup_data_not_generated">خطأ: لم يتم إنشاء بيانات النسخ الاحتياطي.</string>
+	<string name="backup_import_success">تم استيراد النسخة الاحتياطية بنجاح! أعد تشغيل التطبيق لتطبيق التغييرات.</string>
+	<string name="backup_import_error">حدث خطأ أثناء استيراد النسخة الاحتياطية.</string>
+	<string name="backup_import_empty_file">خطأ: ملف النسخة الاحتياطية فارغ أو غير قابل للقراءة.</string>
+	<string name="backup_import_read_error">حدث خطأ أثناء قراءة أو معالجة ملف النسخة الاحتياطية.</string>
+
+    <string name="screen_scale_category_title">حشوة الشاشة</string>
+    <string name="screen_scale_x_title">الحشوة الأفقية</string>
+    <string name="screen_scale_x_summary">ضبط الحشوة اليمنى واليسرى للشاشة</string>
+    <string name="screen_scale_y_title">الحشوة العمودية</string>
+    <string name="screen_scale_y_summary">ضبط الحشوة العلوية والسفلية للشاشة</string>
+
+    <string name="doh_provider_updated">تم تحديث إعدادات DNS عبر HTTPS! أعد تشغيل التطبيق لتطبيق التغييرات.</string>
+    <string name="settings_frenchstream_use_new_interface">استخدم الواجهة الجديدة لـ FrenchStream</string>
+    <string name="settings_frenchstream_use_new_interface_on">تشغيل</string>
+    <string name="settings_frenchstream_use_new_interface_off">إيقاف</string>
+
+    <string name="settings_server_voe_category">إعدادات خادم VOE</string>
+    <string name="settings_server_voe_title">تعطيل الترجمات التلقائية لخادم VOE</string>
+    <string name="settings_server_voe_summary">إذا تم التمكين، فلن يتم تمكين ترجمات خادم VOE تلقائيًا حتى لو كانت متاحة ولديها قيمة افتراضية صحيحة</string>
+
+
+    <string name="player_settings_extra_buffer_title">خادم مع تخزين مؤقت إضافي</string>
+    <string name="player_settings_extra_buffer_server_label">خادم مع تخزين مؤقت إضافي</string>
+    <string name="player_settings_extra_buffer_on">مفعل</string>
+    <string name="player_settings_extra_buffer_off">معطل</string>
+    <string name="player_settings_extra_buffer_forced_on">مفعل (قسري)</string>
+    <string name="player_settings_extra_buffer_forced_off">معطل (قسري)</string>
+    <string name="player_settings_extra_buffer_auto_on">مفعل (تلقائي)</string>
+    <string name="player_settings_extra_buffer_auto_off">معطل (تلقائي)</string>
+    <string name="error_dialog_title">تفاصيل الخطأ</string>
+    <string name="error_dialog_message">رسالة الخطأ</string>
+    <string name="error_dialog_cause">السبب</string>
+    <string name="error_dialog_stack_trace">تتبع المكدس</string>
+    <string name="error_dialog_copy">نسخ</string>
+    <string name="error_dialog_copied">تم النسخ!</string>
+    <string name="error_dialog_unknown">خطأ غير معروف</string>
+    <string name="error_dialog_no_cause">لا يوجد سبب</string>
+    <string name="player_settings_gestures_title">إيماءات</string>
+    <string name="player_settings_keep_screen_on_title">إبقاء الشاشة مفعلة أثناء الإيقاف المؤقت</string>
+    <string name="settings_keep_screen_on_when_paused">إبقاء الشاشة مفعلة أثناء الإيقاف المؤقت</string>
+    <string name="settings_keep_screen_on_when_paused_summary">يمنع الشاشة من الانطفاء عند إيقاف الفيديو مؤقتًا</string>
+
+    <string name="settings_category_tmdb">إعدادات TMDb</string>
+    <string name="settings_tmdb_api_key">مفتاح API TMDb مخصص</string>
+    <string name="settings_tmdb_api_key_summary">اتركه فارغًا لاستخدام مفتاح API الافتراضي المقدم مع التطبيق</string>
+    <string name="settings_tmdb_api_key_success">تم تحديث مفتاح API بنجاح</string>
+    <string name="settings_tmdb_api_key_reset">باستخدام مفتاح TMDb API الافتراضي</string>
+    <string name="settings_category_subdl">إعدادات SubDL</string>
+    <string name="settings_subdl_api_key">مفتاح API SubDL</string>
+    <string name="settings_subdl_api_key_summary">أدخل مفتاح API SubDL الشخصي لتمكين SubDL في إعدادات ترجمة المشغل</string>
+    <string name="settings_subdl_api_key_success">تم حفظ مفتاح API SubDL بنجاح</string>
+    <string name="settings_subdl_api_key_reset">تمت إزالة مفتاح API SubDL</string>
+
+    <string name="settings_force_extra_buffer_title">التخزين المؤقت الإضافي العالمي</string>
+    <string name="settings_force_extra_buffer_summary">تمكين التخزين المؤقت الإضافي لجميع الخوادم افتراضيًا</string>
+</resources>

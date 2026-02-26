@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -20,6 +21,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import androidx.preference.SeekBarPreference
+import com.streamflixreborn.streamflix.BuildConfig
 import com.streamflixreborn.streamflix.R
 import com.streamflixreborn.streamflix.activities.main.MainTvActivity
 import com.streamflixreborn.streamflix.backup.BackupRestoreManager
@@ -114,10 +116,6 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
         displaySettings()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     private fun displaySettings() {
         
         findPreference<PreferenceCategory>("pc_streamingcommunity_settings")?.apply {
@@ -137,10 +135,12 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
                 UserPreferences.streamingcommunityDomain = newDomainFromDialog
                 preference.summary = UserPreferences.streamingcommunityDomain
                 if (UserPreferences.currentProvider is StreamingCommunityProvider) {
-                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
-                    requireActivity().apply {
-                        finish()
-                        startActivity(Intent(this, this::class.java))
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
+                        requireActivity().apply {
+                            finish()
+                            startActivity(Intent(this, this::class.java))
+                        }
                     }
                 }
                 true
@@ -165,7 +165,7 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
         }
 
         findPreference<EditTextPreference>("SUBDL_API_KEY")?.apply {
-            summary = if (UserPreferences.subdlApiKey.isEmpty()) getString(R.string.settings_subdl_api_key_summary) else UserPreferences.subdlApiKey
+            summary = if (UserPreferences.subdlApiKey.isEmpty()) getString(R.string.settings_tmdb_api_key_summary) else UserPreferences.subdlApiKey
             text = UserPreferences.subdlApiKey
             setOnPreferenceChangeListener { _, newValue ->
                 val newKey = (newValue as String).trim()
@@ -182,32 +182,15 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("p_settings_about")?.apply {
-            setOnPreferenceClickListener {
-                Toast.makeText(requireContext(), "About screen for TV not yet implemented.", Toast.LENGTH_SHORT).show()
-                true
-            }
+            title = getString(R.string.settings_version_tv)
+            summary = BuildConfig.VERSION_NAME
+            isSelectable = false
         }
 
         findPreference<SwitchPreference>("AUTOPLAY")?.isChecked = UserPreferences.autoplay
         findPreference<SwitchPreference>("AUTOPLAY")?.setOnPreferenceChangeListener { _, newValue ->
             UserPreferences.autoplay = newValue as Boolean
             true
-        }
-
-        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.apply {
-            isChecked = UserPreferences.forceExtraBuffering
-            setOnPreferenceChangeListener { _, newValue ->
-                UserPreferences.forceExtraBuffering = newValue as Boolean
-                true
-            }
-        }
-
-        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.apply {
-            isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
-            setOnPreferenceChangeListener { _, newValue ->
-                UserPreferences.serverVoeAutoSubtitlesDisabled = newValue as Boolean
-                true
-            }
         }
 
         val HasConfigProvider = UserPreferences.currentProvider is ProviderConfigUrl
@@ -339,10 +322,12 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
                     }
                 }
                 if (UserPreferences.currentProvider is StreamingCommunityProvider) {
-                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
-                    requireActivity().apply {
-                        finish()
-                        startActivity(Intent(this, this::class.java))
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
+                        requireActivity().apply {
+                            finish()
+                            startActivity(Intent(this, this::class.java))
+                        }
                     }
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.doh_provider_updated), Toast.LENGTH_LONG).show()
@@ -515,7 +500,7 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
         }
 
         findPreference<EditTextPreference>("SUBDL_API_KEY")?.apply {
-            summary = if (UserPreferences.subdlApiKey.isEmpty()) getString(R.string.settings_subdl_api_key_summary) else UserPreferences.subdlApiKey
+            summary = if (UserPreferences.subdlApiKey.isEmpty()) getString(R.string.settings_tmdb_api_key_summary) else UserPreferences.subdlApiKey
             text = UserPreferences.subdlApiKey
         }
 
@@ -534,13 +519,17 @@ class SettingsTvFragment : LeanbackPreferenceFragmentCompat() {
             }
         }
         findPreference<SwitchPreference>("AUTOPLAY")?.isChecked = UserPreferences.autoplay
-        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.isChecked = UserPreferences.forceExtraBuffering
-        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
         
         val bufferPref: EditTextPreference? = findPreference("p_settings_autoplay_buffer") 
         bufferPref?.summaryProvider = Preference.SummaryProvider<EditTextPreference> { pref ->
             val value = pref.text?.toLongOrNull() ?: 3L
             "$value s"
+        }
+
+        findPreference<Preference>("p_settings_about")?.apply {
+            title = getString(R.string.settings_version_tv)
+            summary = BuildConfig.VERSION_NAME
+            isSelectable = false
         }
     }
 }

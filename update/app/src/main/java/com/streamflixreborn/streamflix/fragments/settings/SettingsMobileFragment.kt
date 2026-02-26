@@ -1,0 +1,530 @@
+package com.streamflixreborn.streamflix.fragments.settings
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.text.InputType
+import android.util.Log
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreference
+import com.streamflixreborn.streamflix.R
+import com.streamflixreborn.streamflix.activities.main.MainMobileActivity
+import com.streamflixreborn.streamflix.backup.BackupRestoreManager
+import com.streamflixreborn.streamflix.backup.ProviderBackupContext
+import com.streamflixreborn.streamflix.database.AppDatabase
+import com.streamflixreborn.streamflix.database.dao.EpisodeDao
+import com.streamflixreborn.streamflix.database.dao.MovieDao
+import com.streamflixreborn.streamflix.database.dao.TvShowDao
+import com.streamflixreborn.streamflix.database.dao.SeasonDao
+import com.streamflixreborn.streamflix.providers.FrenchStreamProvider
+import com.streamflixreborn.streamflix.providers.Provider
+import com.streamflixreborn.streamflix.providers.ProviderConfigUrl
+import com.streamflixreborn.streamflix.providers.ProviderPortalUrl
+import com.streamflixreborn.streamflix.providers.StreamingCommunityProvider
+import com.streamflixreborn.streamflix.providers.TmdbProvider
+import com.streamflixreborn.streamflix.utils.DnsResolver
+import com.streamflixreborn.streamflix.utils.ProviderChangeNotifier
+import com.streamflixreborn.streamflix.utils.UserPreferences
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+class SettingsMobileFragment : PreferenceFragmentCompat() {
+
+    private lateinit var db: AppDatabase
+    private lateinit var movieDao: MovieDao
+    private lateinit var tvShowDao: TvShowDao
+    private lateinit var episodeDao: EpisodeDao
+    private lateinit var seasonDao: SeasonDao
+    private lateinit var backupRestoreManager: BackupRestoreManager
+
+    private val exportBackupLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri: Uri? ->
+        uri?.let {
+            viewLifecycleOwner.lifecycleScope.launch {
+                performBackupExport(it)
+            }
+        }
+    }
+
+    private val importBackupLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            viewLifecycleOwner.lifecycleScope.launch {
+                performBackupImport(it)
+            }
+        }
+    }
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.settings_mobile, rootKey)
+
+        // Inizializzazione DB e Manager
+        db = AppDatabase.getInstance(requireContext())
+        movieDao = db.movieDao()
+        tvShowDao = db.tvShowDao()
+        episodeDao = db.episodeDao()
+        seasonDao = db.seasonDao()
+        
+        // Includiamo i provider statici + i provider TMDb dinamici (lingue principali) nel backup
+        val allProvidersToBackup = Provider.providers.keys.toMutableList().apply {
+            listOf("it", "en", "es", "de", "fr").forEach { lang ->
+                add(TmdbProvider(lang))
+            }
+        }
+
+        backupRestoreManager = BackupRestoreManager(
+            requireContext(),
+            allProvidersToBackup.mapNotNull { provider ->
+                try {
+                    val db = AppDatabase.getInstanceForProvider(provider.name, requireContext())
+                    ProviderBackupContext(
+                        name = provider.name,
+                        movieDao = db.movieDao(),
+                        tvShowDao = db.tvShowDao(),
+                        episodeDao = db.episodeDao(),
+                        seasonDao = db.seasonDao()
+                    )
+                } catch (e: Exception) {
+                    Log.w("BackupRestore", "Skipping ${provider.name}: ${e.message}")
+                    null
+                }
+            }
+        )
+
+        displaySettings()
+    }
+
+    private fun displaySettings() {
+        
+        // Gestione visibilità categoria StreamingCommunity
+        findPreference<PreferenceCategory>("pc_streamingcommunity_settings")?.apply {
+            isVisible = UserPreferences.currentProvider is StreamingCommunityProvider
+        }
+
+        findPreference<ListPreference>("SELECTED_THEME")?.apply {
+            value = UserPreferences.selectedTheme
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.selectedTheme = newValue as String
+                requireActivity().apply {
+                    finish()
+                    startActivity(Intent(this, this::class.java))
+                }
+                true
+            }
+        }
+
+        findPreference<SwitchPreference>("AUTOPLAY")?.apply {
+            isChecked = UserPreferences.autoplay
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.autoplay = newValue as Boolean
+                true
+            }
+        }
+        findPreference<SwitchPreference>("PLAYER_GESTURES")?.apply {
+            isChecked = UserPreferences.playerGestures
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.playerGestures = newValue as Boolean
+                true
+            }
+        }
+
+        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.apply {
+            isChecked = UserPreferences.forceExtraBuffering
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.forceExtraBuffering = newValue as Boolean
+                true
+            }
+        }
+
+        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.apply {
+            isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.serverVoeAutoSubtitlesDisabled = newValue as Boolean
+                true
+            }
+        }
+
+        findPreference<SwitchPreference>("IMMERSIVE_MODE")?.apply {
+            isChecked = UserPreferences.immersiveMode
+            setOnPreferenceChangeListener { _, newValue ->
+                UserPreferences.immersiveMode = newValue as Boolean
+                (activity as? MainMobileActivity)?.updateImmersiveMode()
+                true
+            }
+        }
+
+        findPreference<EditTextPreference>("TMDB_API_KEY")?.apply {
+            summary = if (UserPreferences.tmdbApiKey.isEmpty()) getString(R.string.settings_tmdb_api_key_summary) else UserPreferences.tmdbApiKey
+            text = UserPreferences.tmdbApiKey
+            setOnPreferenceChangeListener { _, newValue ->
+                val newKey = (newValue as String).trim()
+                UserPreferences.tmdbApiKey = newKey
+                summary = if (newKey.isEmpty()) getString(R.string.settings_tmdb_api_key_summary) else newKey
+                val message = if (newKey.isEmpty()) {
+                    getString(R.string.settings_tmdb_api_key_reset)
+                } else {
+                    getString(R.string.settings_tmdb_api_key_success)
+                }
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                true
+            }
+        }
+
+        findPreference<EditTextPreference>("SUBDL_API_KEY")?.apply {
+            summary = if (UserPreferences.subdlApiKey.isEmpty()) getString(R.string.settings_subdl_api_key_summary) else UserPreferences.subdlApiKey
+            text = UserPreferences.subdlApiKey
+            setOnPreferenceChangeListener { _, newValue ->
+                val newKey = (newValue as String).trim()
+                UserPreferences.subdlApiKey = newKey
+                summary = if (newKey.isEmpty()) getString(R.string.settings_subdl_api_key_summary) else newKey
+                val message = if (newKey.isEmpty()) {
+                    getString(R.string.settings_subdl_api_key_reset)
+                } else {
+                    getString(R.string.settings_subdl_api_key_success)
+                }
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                true
+            }
+        }
+
+        val HasConfigProvider = UserPreferences.currentProvider is ProviderConfigUrl
+        findPreference<PreferenceCategory>("pc_provider_settings")?.apply {
+            isVisible = HasConfigProvider
+        }
+
+        if (HasConfigProvider) {
+            val provider = UserPreferences.currentProvider
+            val configProvider = provider as? ProviderConfigUrl
+            val portalProvider = provider as? ProviderPortalUrl
+            var autoUpdateVal = false
+
+
+            findPreference<SwitchPreference>("provider_autoupdate")?.apply {
+                isVisible = portalProvider != null
+                if (isVisible) {
+                    autoUpdateVal = UserPreferences
+                        .getProviderCache(
+                            provider!!, UserPreferences
+                                .PROVIDER_AUTOUPDATE
+                        ) != "false"
+                    isChecked = autoUpdateVal
+                    setOnPreferenceChangeListener { _, newValue ->
+                        val newState = newValue as Boolean
+                        UserPreferences.setProviderCache(
+                            null,
+                            UserPreferences.PROVIDER_AUTOUPDATE,
+                            newState.toString()
+                        )
+                        findPreference<EditTextPreference>("provider_url")?.isEnabled = newState == false
+                        true
+                    }
+                }
+            }
+
+            findPreference<EditTextPreference>("provider_url")?.apply {
+                isVisible = configProvider != null
+                isEnabled = autoUpdateVal == false
+                if (isVisible && provider != null && configProvider != null) {
+                    summary = UserPreferences
+                        .getProviderCache(
+                            provider, UserPreferences
+                                .PROVIDER_URL
+                        )
+                        .ifBlank { provider.defaultBaseUrl }
+                    setOnBindEditTextListener { editText ->
+                        editText.inputType = InputType.TYPE_CLASS_TEXT
+                        editText.imeOptions = EditorInfo.IME_ACTION_DONE
+                        editText.hint = configProvider.defaultBaseUrl
+
+                        editText.setText(summary)
+                    }
+                    setOnPreferenceChangeListener { _, newValue ->
+                        val toSave = (newValue as String)
+                                .ifBlank { configProvider.defaultBaseUrl }
+                                .trim()
+                                .removeSuffix("/") + "/"
+                        UserPreferences.setProviderCache(
+                            null,
+                            UserPreferences.PROVIDER_URL,
+                            toSave
+                        )
+                        summary = toSave
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            configProvider.onChangeUrl()
+                            ProviderChangeNotifier.notifyProviderChanged()
+                        }
+                        true
+                    }
+                }
+            }
+
+            findPreference<EditTextPreference>("provider_portal_url")?.apply {
+                isVisible = portalProvider != null
+                if (isVisible && provider != null && portalProvider != null) {
+                    summary = UserPreferences
+                        .getProviderCache(
+                            provider, UserPreferences
+                                .PROVIDER_PORTAL_URL
+                        )
+                        .ifBlank { provider.defaultPortalUrl }
+                    setOnBindEditTextListener { editText ->
+                        editText.inputType = InputType.TYPE_CLASS_TEXT
+                        editText.imeOptions = EditorInfo.IME_ACTION_DONE
+                        editText.hint = portalProvider.defaultPortalUrl
+                        editText.setText(summary)
+                    }
+                    setOnPreferenceChangeListener { _, newValue ->
+                        val toSave = (newValue as String)
+                            .ifBlank { portalProvider.defaultPortalUrl }
+                            .trim()
+                            .removeSuffix("/") + "/"
+                        summary = toSave
+                        UserPreferences.setProviderCache(
+                            null,
+                            UserPreferences.PROVIDER_PORTAL_URL,
+                            toSave
+                        )
+                        true
+                    }
+                }
+            }
+
+            findPreference<Preference>("provider_autoupdate_now")?.apply {
+                isVisible = portalProvider != null
+                setOnPreferenceClickListener {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        findPreference<EditTextPreference>("provider_url")?.summary =
+                            configProvider!!.onChangeUrl(true)
+                    }
+                    true
+                }
+            }
+        }
+
+        findPreference<Preference>("p_settings_about")?.apply {
+            setOnPreferenceClickListener {
+                findNavController().navigate(
+                    SettingsMobileFragmentDirections.actionSettingsToSettingsAbout()
+                )
+                true
+            }
+        }
+
+        findPreference<Preference>("p_settings_help")?.apply {
+            setOnPreferenceClickListener {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/streamflix-reborn/streamflix")
+                    )
+                )
+                true
+            }
+        }
+
+        // Telegram group (mobile only)
+        findPreference<Preference>("p_settings_telegram")?.apply {
+            setOnPreferenceClickListener {
+                val tgIntent = Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=streamflixreborn"))
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/streamflixreborn"))
+                try {
+                    startActivity(tgIntent)
+                } catch (e: Exception) {
+                    startActivity(webIntent)
+                }
+                true
+            }
+        }
+
+        // Rinominato per coerenza, se necessario provider_streamingcommunity_domain
+        findPreference<EditTextPreference>("provider_streamingcommunity_domain")?.apply {
+            summary = UserPreferences.streamingcommunityDomain
+
+            setOnBindEditTextListener { editText ->
+                editText.inputType = InputType.TYPE_CLASS_TEXT
+                editText.imeOptions = EditorInfo.IME_ACTION_DONE
+                editText.hint = "streamingcommunity.example"
+                val pref = UserPreferences.streamingcommunityDomain
+                if (!pref.isNullOrEmpty()) { // Modificato per non impostare testo se è vuoto
+                    editText.setText(pref)
+                } else {
+                    editText.setText(null) // Assicura che l'hint sia mostrato se il pref è vuoto
+                }
+            }
+
+            setOnPreferenceChangeListener { _, newValue ->
+                val newDomain = newValue as String
+                UserPreferences.streamingcommunityDomain = newDomain
+                summary = UserPreferences.streamingcommunityDomain // Usa il valore effettivo da UserPreferences
+                if (UserPreferences.currentProvider is StreamingCommunityProvider) {
+                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService() // Rimosso newDomain, usa UserPreferences
+                    requireActivity().apply {
+                        finish()
+                        startActivity(Intent(this, this::class.java))
+                    }
+                }
+                true
+            }
+        }
+
+        findPreference<ListPreference>("p_doh_provider_url")?.apply {
+            value = UserPreferences.dohProviderUrl // Rimossa logica DOH_DISABLED_VALUE se non necessaria
+            summary = entry
+
+            setOnPreferenceChangeListener { preference, newValue ->
+                val newUrl = newValue as String
+                UserPreferences.dohProviderUrl = newUrl
+                DnsResolver.setDnsUrl(newUrl)
+                if (preference is ListPreference) {
+                    val index = preference.findIndexOfValue(newUrl)
+                    if (index >= 0 && preference.entries != null && index < preference.entries.size) {
+                        preference.summary = preference.entries[index]
+                    } else {
+                        preference.summary = null
+                    }
+                }
+                if (UserPreferences.currentProvider is StreamingCommunityProvider) {
+                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
+                    requireActivity().apply {
+                        finish()
+                        startActivity(Intent(this, this::class.java))
+                    }
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.doh_provider_updated), Toast.LENGTH_LONG).show()
+                }
+                true
+            }
+        }
+
+        findPreference<SwitchPreference>("pc_frenchstream_new_interface")?.apply {
+            isVisible = UserPreferences.currentProvider is FrenchStreamProvider
+            if (isVisible) {
+                val useNewInterface = UserPreferences
+                    .getProviderCache(
+                        UserPreferences.currentProvider!!, UserPreferences
+                            .PROVIDER_NEW_INTERFACE
+                    ) != "false"
+                isChecked = useNewInterface
+                setOnPreferenceChangeListener { _, newValue ->
+                    val newState = newValue as Boolean
+                    UserPreferences.setProviderCache(
+                        null,
+                        UserPreferences.PROVIDER_NEW_INTERFACE,
+                        newState.toString()
+                    )
+                    true
+                }
+            }
+        }
+
+        // Listener per Esporta Backup
+        findPreference<Preference>("key_backup_export_mobile")?.setOnPreferenceClickListener {
+            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val fileName = "streamflix_mobile_backup_$timestamp.json"
+
+            exportBackupLauncher.launch(fileName)
+            true
+        }
+
+        // Listener per Importa Backup
+        findPreference<Preference>("key_backup_import_mobile")?.setOnPreferenceClickListener {
+            importBackupLauncher.launch(arrayOf("application/json"))
+            true
+        }
+
+        // Trailer Player Reset
+        findPreference<Preference>("preferred_player_reset")?.setOnPreferenceClickListener {
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .edit()
+                .remove("preferred_smarttube_package")
+                .apply()
+            Toast.makeText(requireContext(), R.string.settings_trailer_player_reset, Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    private suspend fun performBackupExport(uri: Uri) {
+        val jsonData = backupRestoreManager.exportUserData()
+        if (jsonData != null) {
+            try {
+                requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    outputStream.writer().use { it.write(jsonData) }
+                    Toast.makeText(requireContext(), getString(R.string.backup_export_success), Toast.LENGTH_LONG).show()
+                }
+            } catch (e: IOException) {
+                Toast.makeText(requireContext(), getString(R.string.backup_export_error_write), Toast.LENGTH_LONG).show()
+                Log.e("BackupExportMobile", "Error writing backup file", e)
+            }
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.backup_data_not_generated), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private suspend fun performBackupImport(uri: Uri) {
+        try {
+            val stringBuilder = StringBuilder()
+            requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.bufferedReader().useLines { lines ->
+                    lines.forEach { stringBuilder.append(it) }
+                }
+            }
+            val jsonData = stringBuilder.toString()
+            if (jsonData.isNotBlank()) {
+                val success = backupRestoreManager.importUserData(jsonData)
+                if (success) {
+                    Toast.makeText(requireContext(), getString(R.string.backup_import_success), Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.backup_import_error), Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.backup_import_empty_file), Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), getString(R.string.backup_import_read_error), Toast.LENGTH_LONG).show()
+            Log.e("BackupImportMobile", "Error reading/processing backup file", e)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        
+        findPreference<PreferenceCategory>("pc_streamingcommunity_settings")?.isVisible =
+            UserPreferences.currentProvider is StreamingCommunityProvider
+        findPreference<ListPreference>("SELECTED_THEME")?.value = UserPreferences.selectedTheme
+        findPreference<SwitchPreference>("AUTOPLAY")?.isChecked = UserPreferences.autoplay
+        findPreference<SwitchPreference>("PLAYER_GESTURES")?.isChecked = UserPreferences.playerGestures
+        findPreference<SwitchPreference>("IMMERSIVE_MODE")?.isChecked = UserPreferences.immersiveMode
+        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.isChecked = UserPreferences.forceExtraBuffering
+        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
+
+        // Aggiorna summary per provider_streamingcommunity_domain in onResume
+        findPreference<EditTextPreference>("provider_streamingcommunity_domain")?.summary = UserPreferences.streamingcommunityDomain
+
+        // Aggiorna summary per p_doh_provider_url in onResume
+        findPreference<ListPreference>("p_doh_provider_url")?.apply {
+            summary = entry
+        }
+
+        // Mantenuto per p_settings_autoplay_buffer, se esiste ancora nel XML (non presente nell'ultimo XML mostrato)
+        val bufferPref: EditTextPreference? = findPreference("p_settings_autoplay_buffer")
+        bufferPref?.summaryProvider = Preference.SummaryProvider<EditTextPreference> { pref ->
+            val value = pref.text?.toLongOrNull() ?: 3L
+            "$value seconds" // TODO: Estrarre "seconds" in strings.xml
+        }
+    }
+}

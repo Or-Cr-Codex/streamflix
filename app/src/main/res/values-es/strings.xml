@@ -6,7 +6,7 @@
     <string name="loading_error_details">Detalles del error</string>
     <string name="loading_error_clear_cache">Vaciar caché</string>
     <string name="update_title">Actualización disponible</string>
-    <string name="update_message">Una nueva versión de la aplicación está disponible</string>
+    <string name="update_message">Una nuova versione dell\'applicazione è disponibile</string>
     <string name="update_current_version_label">Versión actual</string>
     <string name="update_new_version_label">Nueva versión</string>
     <string name="update_release_notes">Notas de la versión</string>
@@ -83,8 +83,8 @@
     <string name="player_picture_in_picture_not_supported">PIP no es compatible con tu dispositivo</string>
     <string name="player_external_player_title">Reproducir con</string>
     <string name="player_external_player_error_video">El vídeo todavía no está cargado</string>
-    <string name="player_not_available_it_message">No disponible en servidores italianos, búscalo en TMDB en otros idiomas</string>
-    <string name="player_not_available_lang_message">No disponible en %s, búscalo en TMDB en otros idiomas</string>
+    <string name="player_not_available_it_message">No disponible en servidores italianos, búscalo en TMDB in otros idiomas</string>
+    <string name="player_not_available_lang_message">No disponible en %s, búscalo en TMDB in otros idiomas</string>
     <string name="player_retry_later_message">Vídeo no disponible por el momento. Por favor, inténtelo de nuevo más tarde</string>
     <string name="player_aspect_ratio_fit">Ajustar a la pantalla</string>
     <string name="player_aspect_ratio_fill">Estirar</string>
@@ -113,7 +113,7 @@
     <string name="player_settings_caption_style_font_color_white">Blanco</string>
     <string name="player_settings_caption_style_font_color_yellow">Amarillo</string>
     <string name="player_settings_caption_style_font_color_green">Verde</string>
-    <string name="player_settings_caption_style_font_color_cyan">Cian</string>
+    <string name="player_settings_caption_style_font_color_cyan">Ciano</string>
     <string name="player_settings_caption_style_font_color_blue">Azúl</string>
     <string name="player_settings_caption_style_font_color_magenta">Magenta</string>
     <string name="player_settings_caption_style_font_color_red">Rojo</string>
@@ -146,7 +146,7 @@
     <string name="player_settings_caption_style_background_color_black">Negro</string>
     <string name="player_settings_caption_style_background_color_yellow">Amarillo</string>
     <string name="player_settings_caption_style_background_color_green">Verde</string>
-    <string name="player_settings_caption_style_background_color_cyan">Cian</string>
+    <string name="player_settings_caption_style_background_color_cyan">Ciano</string>
     <string name="player_settings_caption_style_background_color_blue">Azúl</string>
     <string name="player_settings_caption_style_background_color_magenta">Magenta</string>
     <string name="player_settings_caption_style_background_color_red">Rojo</string>
@@ -163,7 +163,7 @@
     <string name="player_settings_caption_style_window_color_black">Negro</string>
     <string name="player_settings_caption_style_window_color_yellow">Amarillo</string>
     <string name="player_settings_caption_style_window_color_green">Verde</string>
-    <string name="player_settings_caption_style_window_color_cyan">Cian</string>
+    <string name="player_settings_caption_style_window_color_cyan">Ciano</string>
     <string name="player_settings_caption_style_window_color_blue">Azúl</string>
     <string name="player_settings_caption_style_window_color_magenta">Magenta</string>
     <string name="player_settings_caption_style_window_color_red">Rojo</string>
@@ -196,6 +196,8 @@
     <string name="player_settings_servers_label">Servidores</string>
     <string name="settings_about">Acerca de</string>
     <string name="settings_about_version">Versión</string>
+    <string name="settings_version_tv">Versión TV</string>
+    <string name="settings_version_mobile">Versión Móvil</string>
     <string name="settings_about_version_name">Versión %s</string>
     <string name="settings_help">Ayuda</string>
     <string name="settings_telegram">Grupo de Telegram</string>
@@ -225,7 +227,7 @@
     <string name="settings_keep_screen_on_when_paused_summary">Evita que la pantalla se apague cuando un vídeo está en pausa</string>
     <string name="miscelaneous_title">Varios</string>
     <string name="clear_cache_done">Caché vaciada</string>
-    <string name="clear_cache_done_409">Caché vaciada automáticamente por error HTTP 409</string>
+    <string name="clear_cache_done_409">Caché vaciada automaticamente por error HTTP 409</string>
     <string name="player_skip_intro">Omitir intro</string>
     <string name="voice_search">Búsqueda por voz</string>
     <string name="voice_error_no_match">No se reconoció nada</string>
@@ -241,7 +243,7 @@
     <string name="watch_trailer_with">Ver tráiler con...</string>
     <string name="youtube">YouTube</string>
     <string name="smarttube">SmartTube</string>
-    <string name="smarttube_stable">SmartTube Estable</string>
+    <string name="smarttube_stable">SmartTube Stable</string>
     <string name="smarttube_beta">SmartTube Beta</string>
     <string name="choose_smarttube_version">Elige la versión de SmartTube</string>
     <string name="settings_trailer_player_title">Reproductor de tráiler</string>
@@ -271,10 +273,6 @@
     <string name="settings_frenchstream_use_new_interface">Usar la nueva interfaz de FrenchStream</string>
     <string name="settings_frenchstream_use_new_interface_on">Activado</string>
     <string name="settings_frenchstream_use_new_interface_off">Desactivado</string>
-
-    <string name="settings_server_voe_category">Ajustes del servidor VOE</string>
-    <string name="settings_server_voe_title">Desactivar subtítulos automáticos del servidor VOE</string>
-    <string name="settings_server_voe_summary">Si está activado, los subtítulos del servidor VOE no se activarán automáticamente aunque estén disponibles y tengan el valor predeterminado true</string>
     <string name="settings_category_interface_title">Ajustes de la interfaz</string>
     <string name="settings_immersive_mode">Modo inmersivo</string>
     <string name="settings_immersive_mode_summary">Oculta las barras de estado y navegación</string>
@@ -314,6 +312,8 @@
     <string name="settings_subdl_api_key_success">Clave API de SubDL guardada correctamente</string>
     <string name="settings_subdl_api_key_reset">Clave API de SubDL eliminada</string>
 
-    <string name="settings_force_extra_buffer_title">Búfer adicional global</string>
-    <string name="settings_force_extra_buffer_summary">Habilitar el almacenamiento en búfer adicional para todos los servidores por defecto</string>
+    <string name="player_settings_manual_zoom_label">Zoom Manual</string>
+    <string name="player_manual_zoom_hint">Usa ARRIBA/ABAJO para zoom vertical, IZQUIERDA/DERECHA para horizontal, ATRÁS para salir</string>
+
+    <string name="bypass_tv_instructions">MUEVA EL CURSOR SOBRE EL CUADRO\nY PULSE OK PER DESBLOQUEAR</string>
 </resources>

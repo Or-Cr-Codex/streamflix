@@ -17,6 +17,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
+import com.streamflixreborn.streamflix.BuildConfig
 import com.streamflixreborn.streamflix.R
 import com.streamflixreborn.streamflix.activities.main.MainMobileActivity
 import com.streamflixreborn.streamflix.backup.BackupRestoreManager
@@ -73,14 +74,12 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_mobile, rootKey)
 
-        // Inizializzazione DB e Manager
         db = AppDatabase.getInstance(requireContext())
         movieDao = db.movieDao()
         tvShowDao = db.tvShowDao()
         episodeDao = db.episodeDao()
         seasonDao = db.seasonDao()
         
-        // Includiamo i provider statici + i provider TMDb dinamici (lingue principali) nel backup
         val allProvidersToBackup = Provider.providers.keys.toMutableList().apply {
             listOf("it", "en", "es", "de", "fr").forEach { lang ->
                 add(TmdbProvider(lang))
@@ -111,7 +110,6 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
 
     private fun displaySettings() {
         
-        // Gestione visibilità categoria StreamingCommunity
         findPreference<PreferenceCategory>("pc_streamingcommunity_settings")?.apply {
             isVisible = UserPreferences.currentProvider is StreamingCommunityProvider
         }
@@ -139,22 +137,6 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
             isChecked = UserPreferences.playerGestures
             setOnPreferenceChangeListener { _, newValue ->
                 UserPreferences.playerGestures = newValue as Boolean
-                true
-            }
-        }
-
-        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.apply {
-            isChecked = UserPreferences.forceExtraBuffering
-            setOnPreferenceChangeListener { _, newValue ->
-                UserPreferences.forceExtraBuffering = newValue as Boolean
-                true
-            }
-        }
-
-        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.apply {
-            isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
-            setOnPreferenceChangeListener { _, newValue ->
-                UserPreferences.serverVoeAutoSubtitlesDisabled = newValue as Boolean
                 true
             }
         }
@@ -281,7 +263,7 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
                             provider, UserPreferences
                                 .PROVIDER_PORTAL_URL
                         )
-                        .ifBlank { provider.defaultPortalUrl }
+                        .ifBlank { portalProvider.defaultPortalUrl }
                     setOnBindEditTextListener { editText ->
                         editText.inputType = InputType.TYPE_CLASS_TEXT
                         editText.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -317,12 +299,9 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
         }
 
         findPreference<Preference>("p_settings_about")?.apply {
-            setOnPreferenceClickListener {
-                findNavController().navigate(
-                    SettingsMobileFragmentDirections.actionSettingsToSettingsAbout()
-                )
-                true
-            }
+            title = getString(R.string.settings_version_mobile)
+            summary = BuildConfig.VERSION_NAME
+            isSelectable = false
         }
 
         findPreference<Preference>("p_settings_help")?.apply {
@@ -337,7 +316,6 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Telegram group (mobile only)
         findPreference<Preference>("p_settings_telegram")?.apply {
             setOnPreferenceClickListener {
                 val tgIntent = Intent(Intent.ACTION_VIEW, Uri.parse("tg://resolve?domain=streamflixreborn"))
@@ -351,7 +329,6 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Rinominato per coerenza, se necessario provider_streamingcommunity_domain
         findPreference<EditTextPreference>("provider_streamingcommunity_domain")?.apply {
             summary = UserPreferences.streamingcommunityDomain
 
@@ -360,22 +337,24 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
                 editText.imeOptions = EditorInfo.IME_ACTION_DONE
                 editText.hint = "streamingcommunity.example"
                 val pref = UserPreferences.streamingcommunityDomain
-                if (!pref.isNullOrEmpty()) { // Modificato per non impostare testo se è vuoto
+                if (!pref.isNullOrEmpty()) {
                     editText.setText(pref)
                 } else {
-                    editText.setText(null) // Assicura che l'hint sia mostrato se il pref è vuoto
+                    editText.setText(null)
                 }
             }
 
             setOnPreferenceChangeListener { _, newValue ->
                 val newDomain = newValue as String
                 UserPreferences.streamingcommunityDomain = newDomain
-                summary = UserPreferences.streamingcommunityDomain // Usa il valore effettivo da UserPreferences
+                summary = UserPreferences.streamingcommunityDomain
                 if (UserPreferences.currentProvider is StreamingCommunityProvider) {
-                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService() // Rimosso newDomain, usa UserPreferences
-                    requireActivity().apply {
-                        finish()
-                        startActivity(Intent(this, this::class.java))
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
+                        requireActivity().apply {
+                            finish()
+                            startActivity(Intent(this, this::class.java))
+                        }
                     }
                 }
                 true
@@ -383,7 +362,7 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
         }
 
         findPreference<ListPreference>("p_doh_provider_url")?.apply {
-            value = UserPreferences.dohProviderUrl // Rimossa logica DOH_DISABLED_VALUE se non necessaria
+            value = UserPreferences.dohProviderUrl
             summary = entry
 
             setOnPreferenceChangeListener { preference, newValue ->
@@ -399,10 +378,12 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
                     }
                 }
                 if (UserPreferences.currentProvider is StreamingCommunityProvider) {
-                    (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
-                    requireActivity().apply {
-                        finish()
-                        startActivity(Intent(this, this::class.java))
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        (UserPreferences.currentProvider as StreamingCommunityProvider).rebuildService()
+                        requireActivity().apply {
+                            finish()
+                            startActivity(Intent(this, this::class.java))
+                        }
                     }
                 } else {
                     Toast.makeText(requireContext(), getString(R.string.doh_provider_updated), Toast.LENGTH_LONG).show()
@@ -432,7 +413,6 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
             }
         }
 
-        // Listener per Esporta Backup
         findPreference<Preference>("key_backup_export_mobile")?.setOnPreferenceClickListener {
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "streamflix_mobile_backup_$timestamp.json"
@@ -441,13 +421,11 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
             true
         }
 
-        // Listener per Importa Backup
         findPreference<Preference>("key_backup_import_mobile")?.setOnPreferenceClickListener {
             importBackupLauncher.launch(arrayOf("application/json"))
             true
         }
 
-        // Trailer Player Reset
         findPreference<Preference>("preferred_player_reset")?.setOnPreferenceClickListener {
             PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .edit()
@@ -509,22 +487,13 @@ class SettingsMobileFragment : PreferenceFragmentCompat() {
         findPreference<SwitchPreference>("AUTOPLAY")?.isChecked = UserPreferences.autoplay
         findPreference<SwitchPreference>("PLAYER_GESTURES")?.isChecked = UserPreferences.playerGestures
         findPreference<SwitchPreference>("IMMERSIVE_MODE")?.isChecked = UserPreferences.immersiveMode
-        findPreference<SwitchPreference>("FORCE_EXTRA_BUFFERING")?.isChecked = UserPreferences.forceExtraBuffering
-        findPreference<SwitchPreference>("SERVER_VOE_AUTO_SUBTITLES_DISABLED")?.isChecked = UserPreferences.serverVoeAutoSubtitlesDisabled
-
-        // Aggiorna summary per provider_streamingcommunity_domain in onResume
         findPreference<EditTextPreference>("provider_streamingcommunity_domain")?.summary = UserPreferences.streamingcommunityDomain
+        findPreference<ListPreference>("p_doh_provider_url")?.apply { summary = entry }
 
-        // Aggiorna summary per p_doh_provider_url in onResume
-        findPreference<ListPreference>("p_doh_provider_url")?.apply {
-            summary = entry
-        }
-
-        // Mantenuto per p_settings_autoplay_buffer, se esiste ancora nel XML (non presente nell'ultimo XML mostrato)
-        val bufferPref: EditTextPreference? = findPreference("p_settings_autoplay_buffer")
-        bufferPref?.summaryProvider = Preference.SummaryProvider<EditTextPreference> { pref ->
-            val value = pref.text?.toLongOrNull() ?: 3L
-            "$value seconds" // TODO: Estrarre "seconds" in strings.xml
+        findPreference<Preference>("p_settings_about")?.apply {
+            title = getString(R.string.settings_version_mobile)
+            summary = BuildConfig.VERSION_NAME
+            isSelectable = false
         }
     }
 }

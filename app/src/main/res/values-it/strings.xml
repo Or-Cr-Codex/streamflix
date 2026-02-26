@@ -28,6 +28,7 @@
     <string name="main_menu_home">Home</string>
     <string name="main_menu_movies">Film</string>
     <string name="main_menu_tv_shows">Serie TV</string>
+    <string name="main_menu_all_channels">Tutti i canali</string>
     <string name="main_menu_settings">Impostazioni</string>
     <string name="main_menu_theme_change">Cambia Tema</string>
     <string name="theme_default">Predefinito</string>
@@ -96,7 +97,7 @@
     <string name="player_subtitle_tv_show">S%d E%d • %s</string>
     <string name="player_subtitle_tv_show_episode_only">E%d • %s</string>
     <string name="player_picture_in_picture_not_supported">Il PiP non è supportato dal dispositivo in uso</string>
-    <string name="player_external_player_title">Avvia con</string>
+    <string name="player_external_player_title">Il video sarà avviato con</string>
     <string name="player_external_player_error_video">Video non ancora caricato</string>
     <string name="player_not_available_it_message">Non presente nei server italiani, cercalo su TMDB in altre lingue</string>
     <string name="player_not_available_lang_message">Non disponibile in %s, cercalo su TMDB in altre lingue</string>
@@ -209,6 +210,8 @@
     <string name="player_settings_servers_label">Servers</string>
 
     <string name="settings_about_version">Versione</string>
+    <string name="settings_version_tv">Versione TV</string>
+    <string name="settings_version_mobile">Versione Mobile</string>
     <string name="settings_about_version_name">Versione %s</string>
     <string name="settings_help">Aiuto</string>
     <string name="settings_telegram">Gruppo Telegram</string>
@@ -285,15 +288,9 @@
     <string name="backup_import_read_error">Errore durante la lettura o l\'elaborazione del file di backup.</string>
 
     <string name="doh_provider_updated">Impostazioni DNS over HTTPS aggiornate! Riavvio per applicare.</string>
-    <string name="settings_category_frenchstream">Impostazioni FrenchStream</string>
     <string name="settings_frenchstream_use_new_interface">Usa la nuova interfaccia FrenchStream</string>
     <string name="settings_frenchstream_use_new_interface_on">Attiva</string>
     <string name="settings_frenchstream_use_new_interface_off">Disattivata</string>
-
-    <string name="settings_server_voe_category">Impostazioni server VOE</string>
-    <string name="settings_server_voe_title">Sottotitoli server VOE disattivati di default</string>
-    <string name="settings_server_voe_summary">Se attivo, i sottotitoli del server VOE non saranno abilitati in automatico se sono disponibili e hanno il valore default true</string>
-
 
     <string name="settings_category_interface_title">Impostazioni interfaccia</string>
     <string name="settings_immersive_mode">Modalità Immersiva</string>
@@ -338,7 +335,9 @@
     <string name="settings_subdl_api_key_summary">Inserisci la tua API key personale di SubDL per abilitare SubDL nelle impostazioni dei sottotitoli del player</string>
     <string name="settings_subdl_api_key_success">SubDL API Key salvata con successo</string>
     <string name="settings_subdl_api_key_reset">SubDL API Key rimossa</string>
-    
-    <string name="settings_force_extra_buffer_title">Extra Buffering Globale</string>
-    <string name="settings_force_extra_buffer_summary">Abilita l\'extra buffering per tutti i server per impostazione predefinita</string>
+
+    <string name="player_settings_manual_zoom_label">Zoom Manuale</string>
+    <string name="player_manual_zoom_hint">Usa SU/GIÙ per zoom verticale, SX/DX per orizzontale, INDIETRO per uscire</string>
+
+    <string name="bypass_tv_instructions">MUOVI IL MIRINO SUL QUADRATINO\nE PREMI OK PER SBLOCCARE</string>
 </resources>

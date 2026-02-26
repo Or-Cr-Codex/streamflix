@@ -78,7 +78,7 @@
     <string name="movie_trailer">Trailer</string>
     <string name="movie_cast">Besetzung</string>
     <string name="movie_directors">Regisseur</string>
-    <string name="movie_you_may_also_like">Könnte dir auch gefallen:</string>
+    <string name="movie_you_may_also_like">Könnte dir anche gefallen:</string>
 
     <string name="season_number">Staffel %d</string>
     <string name="episode_number">Episode %d</string>
@@ -204,6 +204,8 @@
 
     <string name="settings_about">Über</string>
     <string name="settings_about_version">Version</string>
+    <string name="settings_version_tv">Version TV</string>
+    <string name="settings_version_mobile">Version Mobile</string>
     <string name="settings_about_version_name">Version %s</string>
     <string name="settings_help">Hilfe</string>
     <string name="settings_telegram">Telegram‑Gruppe</string>
@@ -264,10 +266,6 @@
     <string name="settings_frenchstream_use_new_interface_on">Ein</string>
     <string name="settings_frenchstream_use_new_interface_off">Aus</string>
 
-    <string name="settings_server_voe_category">VOE-Server-Einstellungen</string>
-    <string name="settings_server_voe_title">Automatische Untertitel des VOE-Servers deaktivieren</string>
-    <string name="settings_server_voe_summary">Wenn aktiviert, werden Untertitel vom VOE-Server nicht automatisch aktiviert, auch wenn sie verfügbar sind und einen Standard-True-Wert haben</string>
-
 
     <string name="player_settings_extra_buffer_title">Server mit Extra-Buffering</string>
     <string name="player_settings_extra_buffer_server_label">Server mit Extra-Buffering</string>
@@ -277,14 +275,6 @@
     <string name="player_settings_extra_buffer_forced_off">Deaktiviert (Erzwungen)</string>
     <string name="player_settings_extra_buffer_auto_on">Aktiv (Standard)</string>
     <string name="player_settings_extra_buffer_auto_off">Deaktiviert (Standard)</string>
-    <string name="error_dialog_title">Fehlerdetails</string>
-    <string name="error_dialog_message">Fehlermeldung</string>
-    <string name="error_dialog_cause">Ursache</string>
-    <string name="error_dialog_stack_trace">Stack Trace</string>
-    <string name="error_dialog_copy">Kopieren</string>
-    <string name="error_dialog_copied">In Zwischenablage kopiert!</string>
-    <string name="error_dialog_unknown">Unbekannter Fehler</string>
-    <string name="error_dialog_no_cause">Keine Ursache</string>
     <string name="player_settings_gestures_title">Gesten</string>
     <string name="player_settings_keep_screen_on_title">Bildschirm im Pause-Modus anlassen</string>
 
@@ -299,6 +289,8 @@
     <string name="settings_subdl_api_key_success">SubDL API-Schlüssel erfolgreich gespeichert</string>
     <string name="settings_subdl_api_key_reset">SubDL API-Schlüssel entfernt</string>
 
-    <string name="settings_force_extra_buffer_title">Globales Extra-Buffering</string>
-    <string name="settings_force_extra_buffer_summary">Zusätzliches Buffering standardmäßig für alle Server aktivieren</string>
+    <string name="player_settings_manual_zoom_label">Manueller Zoom</string>
+    <string name="player_manual_zoom_hint">Nutze AUF/AB für vertikalen Zoom, LINKS/RECHTS für horizontalen Zoom, ZURÜCK zum Beenden</string>
+
+    <string name="bypass_tv_instructions">BEWEGEN SIE DEN CURSOR ÜBER DAS KÄSTCHEN\nUND DRÜCKEN SIE OK ZUM ENTSPERREN</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.streamflixreborn.streamflix.providers
 
+import android.content.Context
+import com.streamflixreborn.streamflix.R
 import com.streamflixreborn.streamflix.adapters.AppAdapter
 import com.streamflixreborn.streamflix.models.Category
 import com.streamflixreborn.streamflix.models.Episode
@@ -51,6 +53,14 @@ interface Provider {
 
     suspend fun getVideo(server: Video.Server): Video
 
+    fun getTvShowsTitle(context: Context): String {
+        return if (this.name == "CableVisionHD" || this.name == "TvporinternetHD") {
+            context.getString(R.string.main_menu_all_channels)
+        } else {
+            context.getString(R.string.main_menu_tv_shows)
+        }
+    }
+
     companion object {
         data class ProviderSupport(
             val movies: Boolean,
@@ -100,15 +110,12 @@ interface Provider {
             AfterDarkProvider to ProviderSupport(movies = true, tvShows = true)
         )
 
-        // Helper functions to check support
         fun supportsMovies(provider: Provider): Boolean {
-            val support = providers[provider] ?: ProviderSupport(movies = true, tvShows = true)
-            return support.movies
+            return providers[provider]?.movies ?: true
         }
 
         fun supportsTvShows(provider: Provider): Boolean {
-            val support = providers[provider] ?: ProviderSupport(movies = true, tvShows = true)
-            return support.tvShows
+            return providers[provider]?.tvShows ?: true
         }
     }
 }

@@ -115,8 +115,9 @@
     <string name="player_settings_caption_style_margin_title">هامش سفلي</string>
     <string name="player_settings_caption_style_margin_label">هامش سفلي</string>
 
-	<string name="settings_about">حول</string>
 	<string name="settings_about_version">الإصدار</string>
+	<string name="settings_version_tv">نسخة التلفاز</string>
+	<string name="settings_version_mobile">نسخة الهاتف</string>
 	<string name="settings_about_version_name">الإصدار %s</string>
 	<string name="settings_help">مساعدة</string>
 	<string name="settings_telegram">مجموعة تيليجرام</string>
@@ -184,10 +185,6 @@
     <string name="settings_frenchstream_use_new_interface_on">تشغيل</string>
     <string name="settings_frenchstream_use_new_interface_off">إيقاف</string>
 
-    <string name="settings_server_voe_category">إعدادات خادم VOE</string>
-    <string name="settings_server_voe_title">تعطيل الترجمات التلقائية لخادم VOE</string>
-    <string name="settings_server_voe_summary">إذا تم التمكين، فلن يتم تمكين ترجمات خادم VOE تلقائيًا حتى لو كانت متاحة ولديها قيمة افتراضية صحيحة</string>
-
 
     <string name="player_settings_extra_buffer_title">خادم مع تخزين مؤقت إضافي</string>
     <string name="player_settings_extra_buffer_server_label">خادم مع تخزين مؤقت إضافي</string>
@@ -221,6 +218,5 @@
     <string name="settings_subdl_api_key_success">تم حفظ مفتاح API SubDL بنجاح</string>
     <string name="settings_subdl_api_key_reset">تمت إزالة مفتاح API SubDL</string>
 
-    <string name="settings_force_extra_buffer_title">التخزين المؤقت الإضافي العالمي</string>
-    <string name="settings_force_extra_buffer_summary">تمكين التخزين المؤقت الإضافي لجميع الخوادم افتراضيًا</string>
+    <string name="bypass_tv_instructions">حرك المؤشر فوق المربع\nواضغط على OK لإلغاء القفل</string>
 </resources>

@@ -209,6 +209,8 @@
     <string name="player_settings_servers_label">Serveurs</string>
 
     <string name="settings_about_version">Version</string>
+    <string name="settings_version_tv">Version TV</string>
+    <string name="settings_version_mobile">Version Mobile</string>
     <string name="settings_about_version_name">Version %s</string>
     <string name="settings_help">Aide</string>
     <string name="settings_telegram">Groupe Telegram</string>
@@ -289,10 +291,6 @@
     <string name="settings_frenchstream_use_new_interface_on">Activé</string>
     <string name="settings_frenchstream_use_new_interface_off">Désactivé</string>
 
-    <string name="settings_server_voe_category">Paramètres du serveur VOE</string>
-    <string name="settings_server_voe_title">Désactiver les sous-titres automatiques du serveur VOE</string>
-    <string name="settings_server_voe_summary">Si activé, les sous-titres du serveur VOE ne seront pas activés automatiquement même s\'ils sont disponibles et ont une valeur par défaut true</string>
-
     <string name="settings_category_interface_title">Paramètres d\'interface</string>
     <string name="settings_immersive_mode">Mode Immersif</string>
     <string name="settings_immersive_mode_summary">Cache les barres d\'état et de navigation</string>
@@ -337,6 +335,8 @@
     <string name="settings_subdl_api_key_success">Clé API SubDL enregistrée avec succès</string>
     <string name="settings_subdl_api_key_reset">Clé API SubDL supprimée</string>
 
-    <string name="settings_force_extra_buffer_title">Mise in mémoire tampone extra globale</string>
-    <string name="settings_force_extra_buffer_summary">Activer la mise in mémoire tampone extra pour tous les serveurs par défaut</string>
+    <string name="player_settings_manual_zoom_label">Zoom Manuel</string>
+    <string name="player_manual_zoom_hint">Utilisez HAUT/BAS per zoom vertical, GAUCHE/DROITE pour horizontal, RETOUR pour quitter</string>
+
+    <string name="bypass_tv_instructions">DÉPLACEZ LE CURSEUR SUR LA CASE\nET APPUYEZ SUR OK POUR DÉBLOQUER</string>
 </resources>
